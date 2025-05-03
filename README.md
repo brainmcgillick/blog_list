@@ -1,2 +1,2 @@
 # blog_list
-Fullstackopen Part 4 Exercises
+Fullstackopen Part 4 Exercises Repo
