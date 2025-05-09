@@ -4,8 +4,9 @@
   "description": "Fullstackopen exercise part4",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch index.js"
+    "start": "NODE_ENV=production node index.js",
+    "test": "NODE_ENV=test node --test",
+    "dev": "NODE_ENV=production node --watch index.js"
   },
   "author": "Brian McGillick",
   "license": "MIT",
@@ -13,5 +14,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.14.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.0"
   }
 }
