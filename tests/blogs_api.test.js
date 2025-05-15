@@ -159,7 +159,7 @@ describe('DELETE request', () => {
         // get token for user
         const login = await api
             .post('/api/login')
-            .send({ username: newUser.username, password: newUser.password })
+            .send({ username: initialUser.username, password: initialUser.password })
             
         const blogsBefore = await api.get('/api/blogs')
         const toDelete = blogsBefore.body[0]
@@ -167,7 +167,7 @@ describe('DELETE request', () => {
         await api
             .delete(`/api/blogs/${toDelete.id}`)
             .set('Authorization', `Bearer ${login.body.token}`)
-            .expect(401)
+            .expect(204)
         
         const blogsAfter = await api.get('/api/blogs')
 
@@ -205,15 +205,22 @@ describe('DELETE request', () => {
 })
 
 describe('PUT Request', () => {
-    test('successfully updates existing blog', async () => {
+    test('successfully updates existing blog with correct login', async () => {
+        // get token for user
+        const login = await api
+            .post('/api/login')
+            .send({ username: initialUser.username, password: initialUser.password })
+        
         const blogsBefore = await api.get('/api/blogs')
         const blogToUpdate = blogsBefore.body[0]
 
         blogToUpdate.likes = 44
+        blogToUpdate.user = blogToUpdate.user.id
 
         const updatedBlog = await api
             .put(`/api/blogs/${blogToUpdate.id}`)
             .send(blogToUpdate)
+            .set('Authorization', `Bearer ${login.body.token}`)
             .expect(201)
             .expect('Content-Type', /application\/json/)
         
