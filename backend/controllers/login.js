@@ -9,7 +9,7 @@ loginRouter.post('/', async (req, res) => {
     // confirm username exists
     const user = await User.findOne({ username })
     if (!user) {
-        res.status(400).json({ error: 'username not found' })
+        return res.status(400).json({ error: 'username not found' })
     }
 
     // checkpassword against hash
@@ -18,16 +18,16 @@ loginRouter.post('/', async (req, res) => {
         : await bcrypt.compare(password, user.passwordHash)
         
     if (!passwordCheck) {
-        res.status(401).json({ error: 'invalid password' })
+        return res.status(401).json({ error: 'invalid password' })
     }
         
-    // generate token
+    // generate token with 1 hr expiry
     const userForToken = {
         username: user.username,
         id: user._id
     }
+    const token = await jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
 
-    const token = await jwt.sign(userForToken, process.env.SECRET)
     res.status(200).json({
         token, 
         username: user.username,
